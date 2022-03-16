@@ -36,4 +36,4 @@ encode-audio:
 
 # configure for dash, also makes mpd file
 dashify:
-	mp4box -dash 5000 -rap -profile dashavc264:onDemand -mpd-title BBB -out manifest.mpd -frag 2000 cubemap_audio_128k.mp4 cubemap_160x90_250k.mp4 cubemap_320x180_500k.mp4
+	mp4box -dash 5000 -rap -profile dashavc264:onDemand -mpd-title BBB -out manifest.mpd -frag 2000 stereo_audio_128k.mp4 stereo_front_160x90_250k.mp4 stereo_front_320x180_500k.mp4
