@@ -1,0 +1,6 @@
+video from
+https://vimeo.com/215984159
+
+ffmpeg 360 video commands
+https://jiras.se/ffmpeg/mono.html
+
