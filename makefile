@@ -26,10 +26,10 @@ cubemap-to-rotated-stero:
 
 # encode to different bitstream
 encode-1:
-	ffmpeg -i stereo-front.mp4 -s 160x90 -c:v libx264 -b:v 250k -g 90 -an cubemap_160x90_250k.mp4
+	ffmpeg -i stereo-front.mp4 -s 160x90 -c:v libx264 -b:v 250k -g 90 -an stereo_fron_160x90_250k.mp4
 
 encode-2:
-	ffmpeg -i stereo-front.mp4 -s 320x180 -c:v libx264 -b:v 500k -g 90 -an cubemap_320x180_500k.mp4
+	ffmpeg -i stereo-front.mp4 -s 320x180 -c:v libx264 -b:v 500k -g 90 -an stereo_front_320x180_500k.mp4
 
 encode-audio:
 	ffmpeg -i stereo-front.mp4 -c:a aac -b:a 128k -vn cubemap_audio_128k.mp4
