@@ -1,4 +1,4 @@
-process-video:
+360-video-to-cubemap:
 	ffmpeg -i video/input.mp4 -vf "v360=equirect:c6x1:out_forder=rludfb" video/cubemap.mp4
 
 # seperate single cube from cubemap
