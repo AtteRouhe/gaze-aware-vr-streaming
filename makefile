@@ -24,7 +24,7 @@ crop-down:
 cubemap-to-rotated-stero:
 	ffmpeg -i cubemap.mp4 -vf "v360=c6x1:sg:yaw=0:out_stereo=sbs" stereo-front.mp4
 
-# encode to different bitstream
+# encode to different bitstreams
 encode-1:
 	ffmpeg -i stereo-front.mp4 -s 160x90 -c:v libx264 -b:v 250k -g 90 -an stereo_front_160x90_250k.mp4
 
@@ -32,7 +32,7 @@ encode-2:
 	ffmpeg -i stereo-front.mp4 -s 320x180 -c:v libx264 -b:v 500k -g 90 -an stereo_front_320x180_500k.mp4
 
 encode-audio:
-	ffmpeg -i stereo-front.mp4 -c:a aac -b:a 128k -vn cubemap_audio_128k.mp4
+	ffmpeg -i stereo-front.mp4 -c:a aac -b:a 128k -vn stereo_audio_128k.mp4
 
 # configure for dash, also makes mpd file
 dashify:
