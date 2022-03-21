@@ -32,7 +32,14 @@
         player_front = dashjs.MediaPlayer().create();
         player_front.on(dashjs.MediaPlayer.events["PLAYBACK_PLAYING"], play);
         player_front.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], pause);
-        player_front.initialize(video_front, url_front, false);
+        player_front.updateSettings({
+          streaming: {
+            abr: {
+              autoSwitchBitrate: { video: true },
+            },
+          },
+        });
+        player_front.initialize(video_front, url_front, true);
         players.set("video_front", player_front);
 
         var video_back,
@@ -44,6 +51,13 @@
         player_back = dashjs.MediaPlayer().create();
         player_back.on(dashjs.MediaPlayer.events["PLAYBACK_PLAYING"], play);
         player_back.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], pause);
+        player_back.updateSettings({
+          streaming: {
+            abr: {
+              autoSwitchBitrate: { video: false },
+            },
+          },
+        });
         player_back.initialize(video_back, url_back, false);
         players.set("video_back", player_back);
 
@@ -56,6 +70,13 @@
         player_left = dashjs.MediaPlayer().create();
         player_left.on(dashjs.MediaPlayer.events["PLAYBACK_PLAYING"], play);
         player_left.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], pause);
+        player_left.updateSettings({
+          streaming: {
+            abr: {
+              autoSwitchBitrate: { video: false },
+            },
+          },
+        });
         player_left.initialize(video_left, url_left, false);
         players.set("video_left", player_left);
 
@@ -68,6 +89,13 @@
         player_right = dashjs.MediaPlayer().create();
         player_right.on(dashjs.MediaPlayer.events["PLAYBACK_PLAYING"], play);
         player_right.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], pause);
+        player_right.updateSettings({
+          streaming: {
+            abr: {
+              autoSwitchBitrate: { video: false },
+            },
+          },
+        });
         player_right.initialize(video_right, url_right, false);
         players.set("video_right", player_right);
 
@@ -80,6 +108,13 @@
         player_up = dashjs.MediaPlayer().create();
         player_up.on(dashjs.MediaPlayer.events["PLAYBACK_PLAYING"], play);
         player_up.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], pause);
+        player_up.updateSettings({
+          streaming: {
+            abr: {
+              autoSwitchBitrate: { video: false },
+            },
+          },
+        });
         player_up.initialize(video_up, url_up, false);
         players.set("video_up", player_up);
 
@@ -92,6 +127,13 @@
         player_down = dashjs.MediaPlayer().create();
         player_down.on(dashjs.MediaPlayer.events["PLAYBACK_PLAYING"], play);
         player_down.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], pause);
+        player_down.updateSettings({
+          streaming: {
+            abr: {
+              autoSwitchBitrate: { video: false },
+            },
+          },
+        });
         player_down.initialize(video_down, url_down, false);
         players.set("video_down", player_down);
       }
@@ -101,9 +143,27 @@
           if (elem.id === id) {
             elem.hidden = false;
             elem.muted = false;
+            // players.get(elem.id).setQualityFor("video", 4, true);
+            players.get(elem.id).updateSettings({
+              streaming: {
+                abr: {
+                  autoSwitchBitrate: { video: true },
+                },
+              },
+            });
+            console.log("switching " + elem.id + " to good quality");
           } else {
             elem.hidden = true;
             elem.muted = true;
+            players.get(elem.id).updateSettings({
+              streaming: {
+                abr: {
+                  autoSwitchBitrate: { video: false },
+                },
+              },
+            });
+            players.get(elem.id).setQualityFor("video", 0, true);
+            console.log("switching " + elem.id + " to bad quality");
           }
         });
         // document.querySelector(`#${button_id}`).style.display = "block";
@@ -119,7 +179,7 @@
   <body>
     <main>
       <div>
-        <video id="video_front" controls="true"></video>
+        <video id="video_front" controls="true" muted></video>
         <video id="video_back" controls="true" hidden muted></video>
         <video id="video_left" controls="true" hidden muted></video>
         <video id="video_right" controls="true" hidden muted></video>
