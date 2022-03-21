@@ -8,6 +8,8 @@
       referrerpolicy="no-referrer"
     ></script>
     <script>
+      var players = new Map();
+
       function play(e) {
         document.querySelectorAll("video").forEach((elem) => {
           elem.play();
@@ -31,6 +33,7 @@
         player_front.on(dashjs.MediaPlayer.events["PLAYBACK_PLAYING"], play);
         player_front.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], pause);
         player_front.initialize(video_front, url_front, false);
+        players.set("video_front", player_front);
 
         var video_back,
           player_back,
@@ -42,6 +45,7 @@
         player_back.on(dashjs.MediaPlayer.events["PLAYBACK_PLAYING"], play);
         player_back.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], pause);
         player_back.initialize(video_back, url_back, false);
+        players.set("video_back", player_back);
 
         var video_left,
           player_left,
@@ -53,6 +57,7 @@
         player_left.on(dashjs.MediaPlayer.events["PLAYBACK_PLAYING"], play);
         player_left.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], pause);
         player_left.initialize(video_left, url_left, false);
+        players.set("video_left", player_left);
 
         var video_right,
           player_right,
@@ -64,11 +69,36 @@
         player_right.on(dashjs.MediaPlayer.events["PLAYBACK_PLAYING"], play);
         player_right.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], pause);
         player_right.initialize(video_right, url_right, false);
+        players.set("video_right", player_right);
+
+        var video_up,
+          player_up,
+          url_up =
+            "http://localhost:8000/video/dash_videos/stereo_up_dash/manifest.mpd";
+
+        video_up = document.querySelector("#video_up");
+        player_up = dashjs.MediaPlayer().create();
+        player_up.on(dashjs.MediaPlayer.events["PLAYBACK_PLAYING"], play);
+        player_up.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], pause);
+        player_up.initialize(video_up, url_up, false);
+        players.set("video_up", player_up);
+
+        var video_down,
+          player_down,
+          url_down =
+            "http://localhost:8000/video/dash_videos/stereo_down_dash/manifest.mpd";
+
+        video_down = document.querySelector("#video_down");
+        player_down = dashjs.MediaPlayer().create();
+        player_down.on(dashjs.MediaPlayer.events["PLAYBACK_PLAYING"], play);
+        player_down.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], pause);
+        player_down.initialize(video_down, url_down, false);
+        players.set("video_down", player_down);
       }
 
-      function changeFOV(button_id) {
+      function changeFOV(id) {
         document.querySelectorAll("video").forEach((elem) => {
-          if (elem.id === button_id) {
+          if (elem.id === id) {
             elem.hidden = false;
             elem.muted = false;
           } else {
@@ -93,6 +123,8 @@
         <video id="video_back" controls="true" hidden muted></video>
         <video id="video_left" controls="true" hidden muted></video>
         <video id="video_right" controls="true" hidden muted></video>
+        <video id="video_up" controls="true" hidden muted></video>
+        <video id="video_down" controls="true" hidden muted></video>
       </div>
       <div>
         <button id="button_front" onclick="changeFOV('video_front')">
@@ -103,6 +135,8 @@
         <button id="button_back" onclick="changeFOV('video_right')">
           RIGHT
         </button>
+        <button id="button_back" onclick="changeFOV('video_up')">UP</button>
+        <button id="button_back" onclick="changeFOV('video_down')">DOWN</button>
       </div>
     </main>
     <script>
