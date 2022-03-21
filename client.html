@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/dashjs/4.3.0/dash.all.min.js"
+      integrity="sha512-XySDxg2J8BFPCGF0ToToWEkPGqvg9as64sBRrelx17aITK+JKxBEG9fATs5F2H/d5OLZP4V3AULTeM4k14coGQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      function play(e) {
+        document.querySelectorAll("video").forEach((elem) => {
+          elem.play();
+        });
+      }
+
+      function pause() {
+        document.querySelectorAll("video").forEach((elem) => {
+          elem.pause();
+        });
+      }
+
+      function init() {
+        var video_front,
+          player_front,
+          url_front =
+            "http://localhost:8000/video/dash_videos/stereo_front_dash/manifest.mpd";
+
+        video_front = document.querySelector("#video_front");
+        player_front = dashjs.MediaPlayer().create();
+        player_front.on(dashjs.MediaPlayer.events["PLAYBACK_PLAYING"], play);
+        player_front.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], pause);
+        player_front.initialize(video_front, url_front, false);
+
+        var video_back,
+          player_back,
+          url_back =
+            "http://localhost:8000/video/dash_videos/stereo_back_dash/manifest.mpd";
+
+        video_back = document.querySelector("#video_back");
+        player_back = dashjs.MediaPlayer().create();
+        player_back.on(dashjs.MediaPlayer.events["PLAYBACK_PLAYING"], play);
+        player_back.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], pause);
+        player_back.initialize(video_back, url_back, false);
+
+        var video_left,
+          player_left,
+          url_left =
+            "http://localhost:8000/video/dash_videos/stereo_left_dash/manifest.mpd";
+
+        video_left = document.querySelector("#video_left");
+        player_left = dashjs.MediaPlayer().create();
+        player_left.on(dashjs.MediaPlayer.events["PLAYBACK_PLAYING"], play);
+        player_left.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], pause);
+        player_left.initialize(video_left, url_left, false);
+
+        var video_right,
+          player_right,
+          url_right =
+            "http://localhost:8000/video/dash_videos/stereo_right_dash/manifest.mpd";
+
+        video_right = document.querySelector("#video_right");
+        player_right = dashjs.MediaPlayer().create();
+        player_right.on(dashjs.MediaPlayer.events["PLAYBACK_PLAYING"], play);
+        player_right.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], pause);
+        player_right.initialize(video_right, url_right, false);
+      }
+
+      function changeFOV(button_id) {
+        document.querySelectorAll("video").forEach((elem) => {
+          if (elem.id === button_id) {
+            elem.hidden = false;
+            elem.muted = false;
+          } else {
+            elem.hidden = true;
+            elem.muted = true;
+          }
+        });
+        // document.querySelector(`#${button_id}`).style.display = "block";
+      }
+    </script>
+    <style>
+      video {
+        width: 640px;
+        height: 360px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div>
+        <video id="video_front" controls="true"></video>
+        <video id="video_back" controls="true" hidden muted></video>
+        <video id="video_left" controls="true" hidden muted></video>
+        <video id="video_right" controls="true" hidden muted></video>
+      </div>
+      <div>
+        <button id="button_front" onclick="changeFOV('video_front')">
+          FRONT
+        </button>
+        <button id="button_back" onclick="changeFOV('video_back')">BACK</button>
+        <button id="button_back" onclick="changeFOV('video_left')">LEFT</button>
+        <button id="button_back" onclick="changeFOV('video_right')">
+          RIGHT
+        </button>
+      </div>
+    </main>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        init();
+      });
+    </script>
+  </body>
+</html>
