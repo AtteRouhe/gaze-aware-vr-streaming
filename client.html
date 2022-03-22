@@ -7,10 +7,69 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
       var players = new Map();
 
-      function play(e) {
+      function httpGet(theUrl) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", theUrl, false); // false for synchronous request
+        xmlHttp.send(null);
+        return xmlHttp.responseText;
+      }
+
+      function httpPost(theUrl, body) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("POST", theUrl, false); // false for synchronous request
+        xmlHttp.setRequestHeader("Content-type", "application/json");
+        xmlHttp.send(JSON.stringify({ resolutions: body }));
+        return xmlHttp.responseText;
+      }
+
+      function testLatency() {
+        setInterval(() => {
+          var min = 999999999;
+          var max = -1;
+          document.querySelectorAll("video").forEach((elem) => {
+            var t = elem.currentTime;
+            console.log(t);
+            min = Math.min(t, min);
+            max = Math.max(t, max);
+          });
+          var latency = max - min;
+          console.log("Latency -> " + latency);
+          var theUrl = "http://localhost:8000/client/1/latency/" + latency;
+          console.log(httpGet(theUrl));
+        }, 2000);
+      }
+
+      function testResolution() {
+        var video_buttons = [
+          "button_front",
+          "button_back",
+          "button_left",
+          "button_right",
+          "button_up",
+          "button_down",
+        ];
+        setInterval(() => {
+          var res = [];
+          document.querySelectorAll("video").forEach((elem) => {
+            console.log(elem.videoWidth, elem.videoHeight);
+            res.push([elem.videoWidth, elem.videoHeight]);
+          });
+          console.log(res);
+          var theUrl = "http://localhost:8000/resolution";
+          console.log("HERE", httpPost(theUrl, res));
+          // $.post(theUrl, { resolutions: "SOMEs" });
+
+          var buttonId =
+            video_buttons[Math.floor(Math.random() * video_buttons.length)];
+          document.getElementById(buttonId).click();
+        }, 7000);
+      }
+
+      function play() {
         document.querySelectorAll("video").forEach((elem) => {
           elem.play();
         });
@@ -142,7 +201,7 @@
         document.querySelectorAll("video").forEach((elem) => {
           if (elem.id === id) {
             elem.hidden = false;
-            elem.muted = false;
+            // elem.muted = false;
             // players.get(elem.id).setQualityFor("video", 4, true);
             players.get(elem.id).updateSettings({
               streaming: {
@@ -154,7 +213,7 @@
             console.log("switching " + elem.id + " to good quality");
           } else {
             elem.hidden = true;
-            elem.muted = true;
+            // elem.muted = true;
             players.get(elem.id).updateSettings({
               streaming: {
                 abr: {
@@ -179,6 +238,18 @@
   <body>
     <main>
       <div>
+        <button id="button_front" onclick="changeFOV('video_front')">
+          FRONT
+        </button>
+        <button id="button_back" onclick="changeFOV('video_back')">BACK</button>
+        <button id="button_left" onclick="changeFOV('video_left')">LEFT</button>
+        <button id="button_right" onclick="changeFOV('video_right')">
+          RIGHT
+        </button>
+        <button id="button_up" onclick="changeFOV('video_up')">UP</button>
+        <button id="button_down" onclick="changeFOV('video_down')">DOWN</button>
+      </div>
+      <div>
         <video id="video_front" controls="true" muted></video>
         <video id="video_back" controls="true" hidden muted></video>
         <video id="video_left" controls="true" hidden muted></video>
@@ -186,22 +257,15 @@
         <video id="video_up" controls="true" hidden muted></video>
         <video id="video_down" controls="true" hidden muted></video>
       </div>
-      <div>
-        <button id="button_front" onclick="changeFOV('video_front')">
-          FRONT
-        </button>
-        <button id="button_back" onclick="changeFOV('video_back')">BACK</button>
-        <button id="button_back" onclick="changeFOV('video_left')">LEFT</button>
-        <button id="button_back" onclick="changeFOV('video_right')">
-          RIGHT
-        </button>
-        <button id="button_back" onclick="changeFOV('video_up')">UP</button>
-        <button id="button_back" onclick="changeFOV('video_down')">DOWN</button>
-      </div>
+      <!-- <div>
+        <button id="test_latency" onclick="testLatency()">Test Latency</button>
+      </div> -->
     </main>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         init();
+        // testLatency()
+        // testResolution();
       });
     </script>
   </body>
